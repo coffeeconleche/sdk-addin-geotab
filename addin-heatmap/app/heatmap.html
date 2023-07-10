@@ -1,106 +1,150 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Heat Map</title>
 
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <meta name="description" content="">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Heat Map</title>
+    <!-- build:css styles/vendor.css -->
+    <!-- bower:css -->
+    <link rel="stylesheet" href="bower_components/leaflet/dist/leaflet.css" />
+    <!-- endbower -->
+    <!-- endbuild -->
 
-  <!-- build:css styles/vendor.css -->
-  <!-- bower:css -->
-  <link rel="stylesheet" href="bower_components/leaflet/dist/leaflet.css">
-  <!-- endbower -->
-  <!-- endbuild -->
+    <!-- build:css styles/main.css -->
+    <link rel="stylesheet" href="styles/spinner.css" />
+    <link rel="stylesheet" href="styles/main.css" />
+    <!-- endbuild -->
 
-  <!-- build:css styles/main.css -->
-  <link rel="stylesheet" href="styles/spinner.css">
-  <link rel="stylesheet" href="styles/main.css">
-  <!-- endbuild -->
+    <!-- build:js scripts/vendor.js -->
+    <!-- bower:js -->
+    <script src="bower_components/leaflet/dist/leaflet.js"></script>
+    <script src="bower_components/leaflet.heat/dist/leaflet-heat.js"></script>
+    <!-- endbower -->
+    <!-- endbuild -->
 
-  <!-- build:js scripts/vendor.js -->
-  <!-- bower:js -->
-  <script src="bower_components/leaflet/dist/leaflet.js"></script>
-  <script src="bower_components/leaflet.heat/dist/leaflet-heat.js"></script>
-  <!-- endbower -->
-  <!-- endbuild -->
+    <!-- build:js scripts/main.js -->
+    <script src="scripts/main.js"></script>
+    <!-- endbuild -->
+  </head>
 
-  <!-- build:js scripts/main.js -->
-  <script src="scripts/main.js"></script>
-  <!-- endbuild -->
-</head>
+  <body>
+    <div id="heatmap" style="height: calc(100%)">
+      <div id="disclaimer">
+        <label id="disclaimerLabel">MAPA DE CALOR</label>
+        <p>
+          Esta herramienta le permite ver de forma gráfica el mapa de calor de
+          ubicaciones o de eventos de uno o más vehículos en un rango de tiempo.
+        </p>
+      </div>
 
-<body>
-  
-  <div id="heatmap" style="height: calc(100%)">
-    <div id="disclaimer">
-      <label id="disclaimerLabel">MAPA DE CALOR</label>
-      <p>Esta herramienta le permite ver de forma gráfica el mapa de calor de ubicaciones o de eventos de uno o más vehículos en un rango de tiempo.</p>
-    </div>
-
-    <div class="cssGrid sm-part-12">
-      <div class="lg-part-2 md-part-3 sm-part-12">
-        <div id="controls">
-
-          <!-- <h2>Heatmap</h2>
+      <div class="cssGrid sm-part-12">
+        <div class="lg-part-2 md-part-3 sm-part-12">
+          <div id="controls">
+            <!-- <h2>Heatmap</h2>
           <p>
             This example demonstrates how to create an add-in to visualize location or exception
             (rule violation) history using a heat map.
           </p> -->
 
-          <label for="visualizeBy">Visualización por:</label>
-          <input type="radio" id="visualizeByLocationHistory" name="visualizeBy" value="locationHistory" checked> Ubicación
-          <input type="radio" id="visualizeByExceptionHistory" name="visualizeBy" value="exceptionHistory"> Reglas
+            <label for="visualizeBy">Visualización por:</label>
+            <input
+              type="radio"
+              id="visualizeByLocationHistory"
+              name="visualizeBy"
+              value="locationHistory"
+              checked
+            />
+            Ubicación
+            <input
+              type="radio"
+              id="visualizeByExceptionHistory"
+              name="visualizeBy"
+              value="exceptionHistory"
+            />
+            Reglas
 
-          <label for="exceptionTypes">Regla:</label>
-          <select id="exceptionTypes" class="checkmateFormEditField" ng-mousedown="selectType($event)" disabled>
+            <label for="exceptionTypes">Regla:</label>
+            <select
+              id="exceptionTypes"
+              class="checkmateFormEditField"
+              ng-mousedown="selectType($event)"
+              disabled
+            >
               <option disabled="disabled">Seleccione una regla</option>
-          </select>
+            </select>
 
-          <label for="vehicles">Vehículos:</label>
-          <select id="vehicles" class="checkmateFormEditField" multiple="true"
-            ng-mousedown="selectType($event)">
-          </select>
+            <label for="vehicles">Vehículos:</label>
+            <select
+              id="vehicles"
+              class="checkmateFormEditField"
+              multiple="true"
+              ng-mousedown="selectType($event)"
+            ></select>
 
-          <label for="from">Desde:</label>
-          <input id="from" type="datetime-local" class="checkmateFormEditField" />
+            <label for="from">Desde:</label>
+            <input
+              id="from"
+              type="datetime-local"
+              class="checkmateFormEditField"
+            />
 
-          <label for="to">Hasta:</label>
-          <input id="to" type="datetime-local" class="checkmateFormEditField" />
-          <div style="margin:1em"></div>
-          <input type="submit" value="Show Heat Map" id="showHeatMap">
-          <div id="error"></div>
-          <div id="message"></div>
+            <label for="to">Hasta:</label>
+            <input
+              id="to"
+              type="datetime-local"
+              class="checkmateFormEditField"
+            />
+            <div style="margin: 1em"></div>
+            <input type="submit" value="Show Heat Map" id="showHeatMap" />
+            <div id="error"></div>
+            <div id="message"></div>
 
-          <div id="loading" class="spinner" style="display:none">
+            <div id="loading" class="spinner" style="display: none">
               <div></div>
               <div></div>
               <div></div>
+            </div>
+
+            <div>
+              <h3>Instrucciones</h3>
+              <ol>
+                <li>
+                  Selecciona la visualización por <i>ubicación</i> o
+                  <i>regla</i>.
+                </li>
+                <li>
+                  Si escoge la visualización por regla, seleccione una regla
+                  para buscar los eventos ocurridos.
+                </li>
+                <li>
+                  Seleccione el o los vehículos a buscar. Para seleccionar más
+                  de un vehículo, mantegra presionado la tecla CTRL al
+                  seleccionar los vehículos adicionales.
+                </li>
+                <li>Especifique un rango de fechas y horas.</li>
+                <li>
+                  Haga click en <i>Mostrar Mapa de Calor</i> para actualizar el
+                  mapa.
+                </li>
+                <!-- <li>After applying any changes to the MyGeotab Groups Filter, refresh the page to apply the filter to the list of vehicles and repeat the above steps.</li> -->
+              </ol>
+              <p>
+                Cuando esté seleccionando los vehículos, use CTRL+Click para
+                seleccionar/deseleccionar vehículos individuales o SHIFT+Click
+                para seleccionar un rango de vehículos. Para seleccionar todos
+                los vehículos en la lista, primero seleccione un vehículo y
+                luego use CTRL+A.
+              </p>
+            </div>
           </div>
-
-          <div>
-            <h3>Instrucciones</h3>
-            <ol>
-              <li>Selecciona la visualización por <i>ubicación</i> o <i>regla</i>.</li>
-              <li>Si escoge la visualización por regla, seleccione una regla para buscar los eventos ocurridos.</li>
-              <li>Seleccione el o los vehículos a buscar. Para seleccionar más de un vehículo, mantegra presionado la tecla CTRL al seleccionar los vehículos adicionales.</li>
-              <li>Especifique un rango de fechas y horas.</li>
-              <li>Haga click en <i>Mostrar Mapa de Calor</i> para actualizar el mapa.</li>
-              <!-- <li>After applying any changes to the MyGeotab Groups Filter, refresh the page to apply the filter to the list of vehicles and repeat the above steps.</li> -->
-            </ol>
-            <p>
-              Cuando esté seleccionando los vehículos, use CTRL+Click para seleccionar/deseleccionar vehículos individuales o SHIFT+Click para seleccionar un rango de vehículos.  Para seleccionar todos los vehículos en la lista, primero seleccione un vehículo y luego use CTRL+A.
-            </p>
-  
-          </div>
+        </div>
+        <div class="lg-part-10 md-part-9 sm-part-12">
+          <div id="heatmap-map" style="width: 100%"></div>
         </div>
       </div>
-      <div class="lg-part-10 md-part-9 sm-part-12">
-          <div id="heatmap-map" style="width:100%"></div>
-        </div>
     </div>
-  </div>
-</body>
-
+  </body>
 </html>
